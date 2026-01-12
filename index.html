@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语启蒙需求调研</title>
+    <!-- html2canvas库用于生成图片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Modern Educational App Design - Inspired by clean, minimal aesthetics */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #F5F4F8;
+            --card-bg: #FFFFFF;
+            --primary-purple: #8B7FD8;
+            --primary-pink: #E8A5C0;
+            --primary-coral: #D4998E;
+            --primary-beige: #E5C9B8;
+            --text-dark: #2D2D3A;
+            --text-light: #6B6B7D;
+            --border-light: #E8E7EC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--card-bg);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 20px 16px;
+            background: var(--card-bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--bg-main);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: #E8E7EC;
+        }
+
+        .back-button:active {
+            transform: scale(0.95);
+        }
+
+        .back-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-wrapper {
+            height: 8px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--primary-pink));
+            border-radius: 8px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px 100px;
+        }
+
+        .question-title {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .question-subtitle {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Abstract Decorative Elements with blur effect */
+        .decorative-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            pointer-events: none;
+            filter: blur(120px);
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-purple);
+            top: -50px;
+            right: -50px;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--primary-pink);
+            bottom: 100px;
+            left: -40px;
+        }
+
+        .shape-3 {
+            width: 180px;
+            height: 180px;
+            background: var(--primary-coral);
+            bottom: -60px;
+            left: -50px;
+            opacity: 0.35;
+        }
+
+        /* Option Cards */
+        .options-grid {
+            display: grid;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .options-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .option-card {
+            background: var(--bg-main);
+            border: 3px solid transparent;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 100px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(139, 127, 216, 0.08);
+        }
+
+        .option-card:hover {
+            background: #FAFAFC;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 127, 216, 0.12);
+        }
+
+        .option-card.selected {
+            background: #F5F2FF;
+            border-color: var(--primary-purple);
+            box-shadow: 0 6px 20px rgba(139, 127, 216, 0.2);
+        }
+
+        .option-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .option-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(to top, white 80%, transparent);
+            z-index: 99;
+        }
+
+        .continue-button {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-purple);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(139, 127, 216, 0.3);
+        }
+
+        .continue-button:hover {
+            background: #7A6EC9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(139, 127, 216, 0.4);
+        }
+
+        .continue-button:active {
+            transform: translateY(0);
+        }
+
+        .continue-button:disabled {
+            background: #D1D1D6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Step Container */
+        .step {
+            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step.hidden {
+            display: none;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Cover Page Styles */
+        .cover-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cover-logo {
+            font-size: 72px;
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.3;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .cover-subtitle {
+            font-size: 18px;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 48px;
+            line-height: 1.6;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .start-button {
+            padding: 18px 48px;
+            border-radius: 24px;
+            border: none;
+            background: var(--primary-purple);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(139, 127, 216, 0.3);
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .start-button:hover {
+            background: #7A6EC9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 127, 216, 0.4);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        /* Loading screen styles */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--card-bg);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .loading-screen.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid var(--bg-main);
+            border-top-color: var(--primary-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        /* Results page styles */
+        .results-page {
+            display: none;
+            min-height: 100vh;
+            padding: 60px 20px 120px;
+        }
+
+        .results-page.active {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 32px;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-header h2 {
+            font-size: 20px;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        /* Results card styles */
+        .results-card {
+            background: var(--bg-main);
+            border-radius: 32px;
+            padding: 40px 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .results-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .results-type {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-type-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-type-subtitle {
+            font-size: 16px;
+            color: var(--text-light);
+            font-weight: 600;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .results-tag {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-section {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .results-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .results-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-section-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-dark);
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-section-content ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .results-section-content li {
+            margin-bottom: 6px;
+        }
+
+        /* Planning card styles */
+        .planning-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .planning-card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .planning-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-actions {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(to top, white 80%, transparent);
+            z-index: 99;
+        }
+
+        .results-button {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            border: none;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+            font-family: '幼圆', 'YouYuan', 'STYuanti', 'Microsoft YaHei', sans-serif;
+        }
+
+        .results-button.primary {
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 127, 216, 0.3);
+        }
+
+        .results-button.primary:hover {
+            background: #7A6EC9;
+            transform: translateY(-1px);
+        }
+
+        .results-button.secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+        }
+
+        .results-button.secondary:hover {
+            background: var(--bg-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Decorative Shapes -->
+        <div class="decorative-shape shape-1"></div>
+        <div class="decorative-shape shape-2"></div>
+        <div class="decorative-shape shape-3"></div>
+
+        <!-- Cover Page -->
+        <div id="coverPage" class="cover-page">
+            <div class="cover-logo">📚</div>
+            <h1 class="cover-title">Rita英语启蒙</h1>
+            <p class="cover-subtitle">帮你更好地了解孩子<br>开始测试孩子的学习类型</p>
+            <button class="start-button" id="startButton">开始测试</button>
+        </div>
+
+        <!-- Survey content - initially hidden -->
+        <div id="surveyContent" style="display: none;">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-top">
+                    <button id="backButton" class="back-button hidden">
+                        ←
+                    </button>
+                    <div style="width: 40px;"></div>
+                </div>
+                <div class="progress-wrapper">
+                    <div id="progressFill" class="progress-fill" style="width: 12.5%;"></div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Step 1: Grade Level -->
+                <div class="step" id="step1">
+                    <div class="question-title">孩子目前就读的年级：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="grade" data-value="托班">
+                            <span class="option-icon">👶</span>
+                            <span class="option-text">托班<br>（幼儿园前）</span>
+                        </div>
+                        <div class="option-card" data-question="grade" data-value="幼儿园">
+                            <span class="option-icon">🎨</span>
+                            <span class="option-text">幼儿园<br>（小/中/大班）</span>
+                        </div>
+                        <div class="option-card" data-question="grade" data-value="小学1-3年级">
+                            <span class="option-icon">📚</span>
+                            <span class="option-text">小学<br>1-3 年级</span>
+                        </div>
+                        <div class="option-card" data-question="grade" data-value="小学4-6年级">
+                            <span class="option-icon">🎓</span>
+                            <span class="option-text">小学<br>4-6 年级</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: School English Environment -->
+                <div class="step hidden" id="step2">
+                    <div class="question-title">学校英语环境：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="schoolType" data-value="公立学校">
+                            <span class="option-icon">🏫</span>
+                            <span class="option-text">公立学校<br>（教材为主，进度稳健）</span>
+                        </div>
+                        <div class="option-card" data-question="schoolType" data-value="民办/私立学校">
+                            <span class="option-icon">🏛️</span>
+                            <span class="option-text">民办/私立学校<br>（英语教学较加强）</span>
+                        </div>
+                        <div class="option-card" data-question="schoolType" data-value="双语学校">
+                            <span class="option-icon">🌏</span>
+                            <span class="option-text">双语学校<br>（中外教结合，课时多）</span>
+                        </div>
+                        <div class="option-card" data-question="schoolType" data-value="国际学校/部">
+                            <span class="option-icon">🌍</span>
+                            <span class="option-text">国际学校/部<br>（全英文环境）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Child's Personality -->
+                <div class="step hidden" id="step3">
+                    <div class="question-title">孩子的性格更接近：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="personality" data-value="外向">
+                            <span class="option-icon">🎉</span>
+                            <span class="option-text">外向<br>（爱表达、不怕错、<br>喜欢热闹）</span>
+                        </div>
+                        <div class="option-card" data-question="personality" data-value="内向">
+                            <span class="option-icon">🤫</span>
+                            <span class="option-text">内向<br>（爱观察、慢热、<br>喜欢安静）</span>
+                        </div>
+                        <div class="option-card" data-question="personality" data-value="动静结合">
+                            <span class="option-icon">⚖️</span>
+                            <span class="option-text">动静结合<br>（分场合,能疯玩<br>也能坐得住）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Favorite Activities -->
+                <div class="step hidden" id="step4">
+                    <div class="question-title">孩子日常最享受哪类活动？</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="activity" data-value="唱歌跳舞">
+                            <span class="option-icon">🎵</span>
+                            <span class="option-text">唱歌跳舞<br>（跟着旋律扭动、<br>模仿动作）</span>
+                        </div>
+                        <div class="option-card" data-question="activity" data-value="听故事">
+                            <span class="option-icon">📖</span>
+                            <span class="option-text">听故事<br>（专注听音频或<br>大人讲绘本）</span>
+                        </div>
+                        <div class="option-card" data-question="activity" data-value="动手做手工">
+                            <span class="option-icon">✂️</span>
+                            <span class="option-text">动手做手工<br>（折纸、乐高、<br>粘土、剪贴）</span>
+                        </div>
+                        <div class="option-card" data-question="activity" data-value="跑跑跳跳">
+                            <span class="option-icon">🏃</span>
+                            <span class="option-text">跑跑跳跳<br>（你追我赶、户外运动、<br>肢体游戏）</span>
+                        </div>
+                        <div class="option-card" data-question="activity" data-value="看动画片">
+                            <span class="option-icon">📺</span>
+                            <span class="option-text">看动画片<br>（被精美的画面<br>和剧情吸引）</span>
+                        </div>
+                        <div class="option-card" data-question="activity" data-value="安静独处">
+                            <span class="option-icon">🎨</span>
+                            <span class="option-text">安静独处<br>（安静看书/完成贴纸/涂色）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Listening Input Time -->
+                <div class="step hidden" id="step5">
+                    <div class="question-title">累计"磨耳朵"时间</div>
+                    <div class="question-subtitle">（儿歌/动画/绘本音频）</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="listening" data-value="小白阶段">
+                            <span class="option-icon">🌱</span>
+                            <span class="option-text">小白阶段<br>从未正式听过</span>
+                        </div>
+                        <div class="option-card" data-question="listening" data-value="起步阶段">
+                            <span class="option-icon">🌿</span>
+                            <span class="option-text">起步阶段<br>断断续续不到一个月</span>
+                        </div>
+                        <div class="option-card" data-question="listening" data-value="积累阶段">
+                            <span class="option-icon">🌳</span>
+                            <span class="option-text">积累阶段<br>已经坚持了 1-6 个月</span>
+                        </div>
+                        <div class="option-card" data-question="listening" data-value="进阶阶段">
+                            <span class="option-icon">🌲</span>
+                            <span class="option-text">进阶阶段<br>有半年以上的<br>稳定输入习惯</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Phonics Progress -->
+                <div class="step hidden" id="step6">
+                    <div class="question-title">自然拼读 (Phonics) 进度：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="phonics" data-value="没学过">
+                            <span class="option-icon">❓</span>
+                            <span class="option-text">没学过<br>（不了解或准备开始）</span>
+                        </div>
+                        <div class="option-card" data-question="phonics" data-value="正在学">
+                            <span class="option-icon">📝</span>
+                            <span class="option-text">正在学<br>（认识字母音或<br>正在练拼读）</span>
+                        </div>
+                        <div class="option-card" data-question="phonics" data-value="学完了">
+                            <span class="option-icon">✅</span>
+                            <span class="option-text">学完了<br>（能熟练见词能读、<br>听音能写）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7: Textbook Exposure -->
+                <div class="step hidden" id="step7">
+                    <div class="question-title">原版教材接触史：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="textbook" data-value="从未接触">
+                            <span class="option-icon">📕</span>
+                            <span class="option-text">从未接触</span>
+                        </div>
+                        <div class="option-card" data-question="textbook" data-value="学习过">
+                            <span class="option-icon">📚</span>
+                            <span class="option-text">学习过<br>（如 Reach Higher, Wonders,<br>Oxford Reading Tree 等）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 8: Daily Listening Time -->
+                <div class="step hidden" id="step8">
+                    <div class="question-title">每天可以保证的"纯听力"时间：</div>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="time" data-value="15-30分钟">
+                            <span class="option-icon">⏱️</span>
+                            <span class="option-text">15-30 分钟<br>（碎片化利用）</span>
+                        </div>
+                        <div class="option-card" data-question="time" data-value="30-60分钟">
+                            <span class="option-icon">⏰</span>
+                            <span class="option-text">30-60 分钟<br>（有固定听力习惯）</span>
+                        </div>
+                        <div class="option-card" data-question="time" data-value="60分钟以上">
+                            <span class="option-icon">⌚</span>
+                            <span class="option-text">60 分钟以上<br>（深度浸润环境）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="bottom-bar">
+                <button id="continueButton" class="continue-button" disabled>
+                    继续
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen hidden">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">正在分析孩子的学习类型...</p>
+        </div>
+
+        <!-- Results Page -->
+        <div id="resultsPage" class="results-page">
+            <!-- 可保存为图片的内容区域 -->
+            <div id="resultImageContent">
+                <div class="results-header">
+                    <h2>你的测试结果是...</h2>
+                </div>
+
+                <!-- Main results card -->
+                <div id="resultsCard" class="results-card">
+                    <div class="results-avatar" id="resultsAvatar">🎭</div>
+                    
+                    <div class="results-type">
+                        <h3 class="results-type-title" id="resultsTypeTitle">动觉型 / 表演家</h3>
+                        <p class="results-type-subtitle" id="resultsTypeSubtitle">爱动的小表演家</p>
+                    </div>
+
+                    <div class="results-tags" id="resultsTags">
+                        <span class="results-tag">#肢体协调强</span>
+                    </div>
+
+                    <div class="results-section">
+                        <h4 class="results-section-title">核心特质</h4>
+                        <div class="results-section-content" id="resultsTraits">
+                            极高的肢体协调能力，喜欢通过身体动作学习和表达
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h4 class="results-section-title">性格解析</h4>
+                        <div class="results-section-content" id="resultsAnalysis">
+                            这类孩子精力充沛，很难长时间安静坐着。
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h4 class="results-section-title">学习方法</h4>
+                        <div class="results-section-content" id="resultsMethod">
+                            <ul>
+                                <li>TPR动作教学：边唱边跳学单词</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planning card -->
+                <div class="planning-card">
+                    <h3 class="planning-card-title">📋 具体规划内容</h3>
+                    <div class="planning-content" id="planningContent">
+                        <p><strong>每日学习计划：</strong></p>
+                        <ul>
+                            <li>晨间活动（10分钟）：TPR歌曲+动作复习</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 可保存内容区域结束 -->
+
+            <div class="results-actions">
+                <button class="results-button primary" onclick="window.location.reload()">🔄 再测一次</button>
+                <button class="results-button secondary" onclick="saveResults()">💾 保存结果卡片</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 8;
+        const formData = {};
+
+        const progressFill = document.getElementById('progressFill');
+        const backButton = document.getElementById('backButton');
+        const continueButton = document.getElementById('continueButton');
+        const steps = document.querySelectorAll('.step');
+        const coverPage = document.getElementById('coverPage');
+        const surveyContent = document.getElementById('surveyContent');
+        const startButton = document.getElementById('startButton');
+
+        // Type definitions with detailed content
+        const typeDefinitions = {
+            kinesthetic: {
+                avatar: '🎭',
+                title: '动觉型 / 表演家',
+                subtitle: '爱动的小表演家',
+                tags: ['#肢体协调强', '#表演欲强', '#活力充沛'],
+                traits: '极高的肢体协调能力，喜欢通过身体动作学习和表达',
+                analysis: '这类孩子精力充沛，很难长时间安静坐着。他们通过"做"来学习，对TPR（全身反应教学法）特别敏感。建议多用唱跳、角色扮演等动态方式进行英语启蒙。',
+                method: [
+                    'TPR动作教学：边唱边跳学单词',
+                    '角色扮演：让孩子演绎故事角色',
+                    '律动游戏：配合音乐做动作',
+                    '户外英语：在运动中学习指令'
+                ],
+                planning: {
+                    daily: [
+                        '晨间活动（10分钟）：TPR歌曲+动作复习',
+                        '主题学习（15-20分钟）：故事配合肢体演绎',
+                        '自由游戏（10分钟）：英语指令游戏'
+                    ],
+                    resources: [
+                        'Super Simple Songs 动作歌曲系列',
+                        '《We Can!》教材（配套动作卡）',
+                        '线下戏剧表演课程'
+                    ]
+                }
+            },
+            auditory: {
+                avatar: '👂',
+                title: '听觉型 / 故事家',
+                subtitle: '专注的小听众',
+                tags: ['#听力敏锐', '#语言天赋', '#想象力丰富'],
+                traits: '对声音和语言特别敏感，喜欢通过听觉接收信息',
+                analysis: '这类孩子听力记忆力强，能够通过听故事、儿歌快速吸收语言。他们喜欢重复听喜欢的内容，并能复述故事情节。适合音频为主的英语启蒙方式。',
+                method: [
+                    '故事音频：每天固定时间听英文绘本',
+                    '儿歌循环：利用碎片时间磨耳朵',
+                    '对话互动：亲子英语对话练习',
+                    '复述训练：鼓励孩子讲述听到的故事'
+                ],
+                planning: {
+                    daily: [
+                        '早晨起床（15分钟）：英文儿歌唤醒',
+                        '专注听读（20分钟）：绘本音频+图片',
+                        '睡前故事（15分钟）：英文故事陪伴入睡'
+                    ],
+                    resources: [
+                        '牛津阅读树音频系列',
+                        'Audible儿童英文故事',
+                        '小猪佩奇/蓝色小考拉音频'
+                    ]
+                }
+            },
+            visual: {
+                avatar: '👀',
+                title: '视觉型 / 观察家',
+                subtitle: '细心的小观察者',
+                tags: ['#观察力强', '#视觉记忆', '#喜欢看图'],
+                traits: '通过观看和视觉线索学习效果最佳，对色彩和画面敏感',
+                analysis: '这类孩子喜欢看动画、绘本，能通过图像记住单词和句子。他们注意力集中在视觉内容上，适合用丰富的图片、视频进行英语启蒙。',
+                method: [
+                    '动画学习：选择优质英文动画片',
+                    '绘本阅读：色彩丰富的图画书',
+                    '单词卡片：图文结合的闪卡',
+                    '视频课程：互动性强的线上课程'
+                ],
+                planning: {
+                    daily: [
+                        '动画时间（20分钟）：英文动画片精看',
+                        '绘本共读（15分钟）：亲子指读绘本',
+                        '单词游戏（10分钟）：图片配对游戏'
+                    ],
+                    resources: [
+                        'Peppa Pig/Bluey动画',
+                        'Sight Word Kids视频',
+                        'Oxford Reading Tree绘本'
+                    ]
+                }
+            },
+            practical: {
+                avatar: '🔨',
+                title: '实操型 / 建造家',
+                subtitle: '喜欢动手的小工程师',
+                tags: ['#动手能力强', '#逻辑思维', '#专注力好'],
+                traits: '喜欢通过动手操作来学习，对拼装、制作类活动兴趣浓厚',
+                analysis: '这类孩子享受动手创造的过程，适合在手工、实验、游戏中融入英语学习。他们需要具体的任务和目标，通过完成项目来掌握语言。',
+                method: [
+                    '手工英语：边做手工边学单词',
+                    '科学实验：用英语指令做简单实验',
+                    '积木游戏：用英语描述搭建过程',
+                    '烹饪英语：跟着英文食谱做简单料理'
+                ],
+                planning: {
+                    daily: [
+                        '项目时间（30分钟）：手工/实验+英语指令',
+                        '游戏互动（15分钟）：积木/拼图英语',
+                        '复习巩固（10分钟）：回顾当日学习内容'
+                    ],
+                    resources: [
+                        'Art for Kids Hub 手工视频',
+                        'Lego指令卡（英文版）',
+                        'Science Experiments for Kids'
+                    ]
+                }
+            },
+            quiet: {
+                avatar: '📖',
+                title: '安静型 / 思考家',
+                subtitle: '独立的小学者',
+                tags: ['#独立思考', '#专注力强', '#自主学习'],
+                traits: '喜欢安静独处，通过自主阅读和观察来学习',
+                analysis: '这类孩子适合安静的学习环境，能够长时间专注于一项活动。他们可能不爱表达，但内心世界丰富。适合用绘本、涂色、贴纸等方式进行英语启蒙。',
+                method: [
+                    '自主阅读：提供丰富的分级读物',
+                    '涂色书写：英文字母/单词描红',
+                    '贴纸活动：单词贴纸书',
+                    '安静游戏：拼图、配对等桌面游戏'
+                ],
+                planning: {
+                    daily: [
+                        '晨读时间（20分钟）：自主翻阅英文绘本',
+                        '安静活动（20分钟）：涂色/贴纸/描红',
+                        '睡前阅读（15分钟）：亲子共读'
+                    ],
+                    resources: [
+                        'I Can Read系列分级读物',
+                        'Usborne贴纸书',
+                        'Kumon英语练习册'
+                    ]
+                }
+            }
+        };
+
+        // Start survey function
+        function startSurvey() {
+            coverPage.style.display = 'none';
+            surveyContent.style.display = 'block';
+        }
+
+        startButton.addEventListener('click', startSurvey);
+
+        function updateProgress() {
+            const progress = ((currentStep) / totalSteps) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        function updateBackButton() {
+            if (currentStep === 0) {
+                backButton.classList.add('hidden');
+            } else {
+                backButton.classList.remove('hidden');
+            }
+        }
+
+        function updateContinueButton() {
+            const currentStepElement = steps[currentStep];
+            const selectedCard = currentStepElement.querySelector('.option-card.selected');
+            continueButton.disabled = !selectedCard;
+        }
+
+        function nextStep() {
+            // Save current step data
+            const currentStepElement = steps[currentStep];
+            const stepKey = `step${currentStep + 1}`;
+            
+            const selectedCard = currentStepElement.querySelector('.option-card.selected');
+            if (selectedCard) {
+                formData[stepKey] = selectedCard.dataset.value;
+            }
+
+            if (currentStep === totalSteps - 1) {
+                // Last step completed, show loading
+                showLoading();
+            } else {
+                // Move to next step
+                steps[currentStep].classList.add('hidden');
+                currentStep++;
+                steps[currentStep].classList.remove('hidden');
+                updateProgress();
+                updateBackButton();
+                updateContinueButton();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                steps[currentStep].classList.add('hidden');
+                currentStep--;
+                steps[currentStep].classList.remove('hidden');
+                updateProgress();
+                updateBackButton();
+                updateContinueButton();
+            }
+        }
+
+        function showLoading() {
+            surveyContent.style.display = 'none';
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.remove('hidden');
+
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                showResults();
+            }, 2000);
+        }
+
+        function determineChildType() {
+            const personality = formData.step3;
+            const activity = formData.step4;
+
+            console.log('Personality:', personality, 'Activity:', activity);
+
+            // 优先判断性格为"内向"的情况
+            if (personality === '内向') {
+                return 'quiet';
+            }
+            
+            // 根据活动选择判断类型
+            if (activity === '跑跑跳跳' || activity === '唱歌跳舞') {
+                return 'kinesthetic';
+            }
+            
+            if (activity === '听故事') {
+                return 'auditory';
+            }
+            
+            if (activity === '看动画片') {
+                return 'visual';
+            }
+            
+            if (activity === '动手做手工') {
+                return 'practical';
+            }
+            
+            return 'kinesthetic';
+        }
+
+        function showResults() {
+            const childType = determineChildType();
+            const typeData = typeDefinitions[childType];
+            
+            const resultsPage = document.getElementById('resultsPage');
+            const resultsCard = document.getElementById('resultsCard');
+            
+            // Update content
+            document.getElementById('resultsAvatar').textContent = typeData.avatar;
+            document.getElementById('resultsTypeTitle').textContent = typeData.title;
+            document.getElementById('resultsTypeSubtitle').textContent = typeData.subtitle;
+            
+            // Update tags
+            const tagsContainer = document.getElementById('resultsTags');
+            tagsContainer.innerHTML = typeData.tags.map(tag => 
+                `<span class="results-tag">${tag}</span>`
+            ).join('');
+            
+            // Update sections
+            document.getElementById('resultsTraits').textContent = typeData.traits;
+            document.getElementById('resultsAnalysis').textContent = typeData.analysis;
+            
+            // Update method
+            const methodHTML = '<ul>' + typeData.method.map(item => 
+                `<li>${item}</li>`
+            ).join('') + '</ul>';
+            document.getElementById('resultsMethod').innerHTML = methodHTML;
+            
+            // Update planning
+            const planningHTML = `
+                <p><strong>每日学习计划：</strong></p>
+                <ul>${typeData.planning.daily.map(item => `<li>${item}</li>`).join('')}</ul>
+                <p><strong>推荐资源：</strong></p>
+                <ul>${typeData.planning.resources.map(item => `<li>${item}</li>`).join('')}</ul>
+            `;
+            document.getElementById('planningContent').innerHTML = planningHTML;
+            
+            resultsPage.classList.add('active');
+        }
+
+        function saveResults() {
+            // 显示加载提示
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '生成中...';
+            button.disabled = true;
+
+            // 获取要保存的内容区域
+            const element = document.getElementById('resultImageContent');
+            
+            // 使用html2canvas生成图片
+            html2canvas(element, {
+                backgroundColor: '#ffffff',
+                scale: 2, // 提高清晰度
+                useCORS: true,
+                logging: false,
+                width: element.scrollWidth,
+                height: element.scrollHeight
+            }).then(canvas => {
+                // 将canvas转换为图片
+                canvas.toBlob(blob => {
+                    // 创建下载链接
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const timestamp = new Date().getTime();
+                    link.download = `英语启蒙测试结果_${timestamp}.png`;
+                    link.href = url;
+                    link.click();
+                    
+                    // 清理
+                    URL.revokeObjectURL(url);
+                    
+                    // 恢复按钮状态
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    
+                    // 提示用户
+                    alert('结果已保存！');
+                }, 'image/png');
+            }).catch(error => {
+                console.error('生成图片失败:', error);
+                button.textContent = originalText;
+                button.disabled = false;
+                alert('保存失败，请重试');
+            });
+        }
+
+        // Event Listeners
+        backButton.addEventListener('click', previousStep);
+        continueButton.addEventListener('click', nextStep);
+
+        // Setup option cards click handlers
+        steps.forEach((step, index) => {
+            const cards = step.querySelectorAll('.option-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Remove selected class from siblings
+                    cards.forEach(c => c.classList.remove('selected'));
+                    // Add selected class to clicked card
+                    card.classList.add('selected');
+                    updateContinueButton();
+                });
+            });
+        });
+
+        // Initialize
+        updateProgress();
+        updateBackButton();
+        updateContinueButton();
+    </script>
+</body>
+</html>
